@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotOneChain.Api", "src\dotOneChain.Api\dotOneChain.Api.csproj", "{D8B2A5C7-00B6-49B3-9F8B-8F6E4D013B9F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0DD57F77-2645-4BA2-A94F-00361E43A27A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NftClientDemo", "test\NftClientDemo\NftClientDemo.csproj", "{7A46B662-A4D2-4F92-AAB2-FC2898970ED9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D8B2A5C7-00B6-49B3-9F8B-8F6E4D013B9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8B2A5C7-00B6-49B3-9F8B-8F6E4D013B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8B2A5C7-00B6-49B3-9F8B-8F6E4D013B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8B2A5C7-00B6-49B3-9F8B-8F6E4D013B9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A46B662-A4D2-4F92-AAB2-FC2898970ED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A46B662-A4D2-4F92-AAB2-FC2898970ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A46B662-A4D2-4F92-AAB2-FC2898970ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A46B662-A4D2-4F92-AAB2-FC2898970ED9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7A46B662-A4D2-4F92-AAB2-FC2898970ED9} = {0DD57F77-2645-4BA2-A94F-00361E43A27A}
+	EndGlobalSection
+EndGlobal

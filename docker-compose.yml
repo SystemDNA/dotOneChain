@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: nftuser
+      MONGO_INITDB_ROOT_PASSWORD: nftpass
+    volumes:
+      - mongodata:/data/db
+
+  ipfs:
+    image: ipfs/kubo:latest
+    ports:
+      - "4001:4001"
+      - "5001:5001"
+      - "8081:8080"
+    volumes:
+      - ipfs_staging:/export
+      - ipfs_data:/data/ipfs
+    command: ["daemon", "--migrate=true"]
+
+  dotonechain-api:
+    build:
+      context: ./src/dotOneChain.Api
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      Mongo__ConnectionString: mongodb://nftuser:nftpass@mongo:27017/?authSource=admin
+      Mongo__Database: dotonechain
+      Storage__Mode: IPFS
+      IPFS__ApiUrl: http://ipfs:5001
+      Authority__PrivateKeyPem: |
+        -----BEGIN PRIVATE KEY-----
+        MIIBVwIBADANBgkqhkiG9w0BAQEFAASCAT8wggE7AgEAAkEA0hYgoF6D3ZrjS8Kz
+        v6Q8eK8QFNRpHpgHnW0NEC3c3Nw6h0YF/6mQy3hC5b9oao2g0xKDGtQbX8f9XU5k
+        4YwYhQIDAQABAkEAo8Q7R2f7H4tGD6O4e8sR9r5NQyZr7v3y2Q5cZK7H9CYYEJxN
+        K1Pjv2sG0kJm1i9aXwZz9oHq5P8e0g0N2R+QkQIhAPnR9d5Yd5qf7H2wSsoq8d5j
+        Qw2zY1mXw1y2X8gP4cLrAiEA1QJk6rKX5XG3NfVj6H8H3b7h1W2aE8s1yU3jzXc3
+        l40CIF37ht0uB5e3wJ3ZrX3Qm3n1N8hO9Ywq3Wl4j3x7iOJAiEAg0nO2XN2jYx0z
+        7gVw4dQp9o3jWZ3k4PxHn1l8E+oZbFkCIQDG2GZk2aT3Y2P6l3m0XkCkT8Yc4j3G
+        GpA4qXzS3v0E9Q==
+        -----END PRIVATE KEY-----
+    ports:
+      - "8080:8080"
+    depends_on: [mongo, ipfs]
+    restart: unless-stopped
+
+volumes:
+  mongodata:
+  ipfs_staging:
+  ipfs_data:

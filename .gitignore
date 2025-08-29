@@ -1,0 +1,15 @@
+.DS_Store
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.log
+*.tmp
+.vscode/
+.idea/
+/mongodata
+/ipfs_data
+/ipfs_staging
+**/appsettings.*.json
+**/*.secrets.json

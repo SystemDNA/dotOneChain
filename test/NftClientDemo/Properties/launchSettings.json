@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NftClientDemo": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
