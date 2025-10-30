@@ -1,0 +1,37 @@
+@page
+@model DynamicFormsRazor.Pages.Forms.CreateModel
+@{
+    ViewData["Title"] = "Publish New Version";
+}
+<h2 class="mb-3">Publish New Version</h2>
+
+@if (!string.IsNullOrWhiteSpace(Model.PrefillMessage))
+{
+    <div class="alert alert-secondary">@Model.PrefillMessage</div>
+}
+
+<form method="post">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label">Form Key (stable)</label>
+            <input asp-for="FormKey" class="form-control" placeholder="e.g. insurance-policy" />
+            <div class="form-text">All versions use the same key.</div>
+        </div>
+        <div class="col-md-8">
+            <label class="form-label">Display Name</label>
+            <input asp-for="FormName" class="form-control" placeholder="e.g. Insurance Policy Application" />
+        </div>
+    </div>
+
+    <div class="card shadow-sm mt-3">
+        <div class="card-header"><strong>Definition (Sections with embedded Fields)</strong></div>
+        <div class="card-body">
+            <textarea asp-for="DefinitionJson" rows="20" class="form-control font-monospace"></textarea>
+        </div>
+    </div>
+
+    <div class="mt-3 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Publish</button>
+        <a href="/Forms" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>

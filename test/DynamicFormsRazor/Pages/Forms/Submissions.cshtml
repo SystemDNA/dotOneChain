@@ -1,0 +1,54 @@
+@page
+@model DynamicFormsRazor.Pages.Forms.SubmissionsModel
+@using DynamicFormsRazor.Models
+@{
+    ViewData["Title"] = "Submissions";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">Submissions: <code>@Model.Key</code> @if(Model.Version.HasValue){<span class="text-muted">v@Model.Version</span>}</h2>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-secondary" href="/Forms">Back</a>
+    @if (Model.Current is not null)
+    {
+      <a class="btn btn-primary" href="/Forms/Render?id=@Model.Current.Id">Open Current</a>
+    }
+  </div>
+</div>
+
+@if (!Model.Items.Any())
+{
+  <div class="alert alert-info">No submissions yet.</div>
+}
+else
+{
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Submitted</th>
+          <th>Version</th>
+          <th>By</th>
+          <th>Client IP</th>
+          <th>Data (JSON)</th>
+        </tr>
+      </thead>
+      <tbody>
+      @foreach (var s in Model.Items)
+      {
+        <tr>
+          <td>@s.SubmittedAtUtc.ToLocalTime()</td>
+          <td>v@s.FormVersion</td>
+          <td>@(string.IsNullOrEmpty(s.SubmittedBy) ? "-" : s.SubmittedBy)</td>
+          <td>@(string.IsNullOrEmpty(s.ClientIp) ? "-" : s.ClientIp)</td>
+          <td>
+            <details>
+              <summary>View</summary>
+              <pre class="small bg-light p-2 border rounded">@s.Data</pre>
+            </details>
+          </td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  </div>
+}

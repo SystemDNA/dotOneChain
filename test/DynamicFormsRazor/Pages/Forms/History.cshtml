@@ -1,0 +1,44 @@
+@page
+@model DynamicFormsRazor.Pages.Forms.HistoryModel
+@{
+    ViewData["Title"] = $"History – {Model.Key}";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">History: <code>@Model.Key</code></h2>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-secondary" href="/Forms">Back</a>
+    <a class="btn btn-outline-dark" href="/Forms/Submissions?key=@Model.Key">View Submissions</a>
+  </div>
+</div>
+
+@if (!Model.Versions.Any())
+{
+  <div class="alert alert-info">No versions found.</div>
+}
+else
+{
+  <div class="list-group">
+    @foreach (var v in Model.Versions)
+    {
+      <div class="list-group-item d-flex justify-content-between align-items-center">
+        <a class="text-decoration-none" href="/Forms/Render?id=@v.Id">
+          <div class="fw-semibold">@v.Name</div>
+          <div class="small text-muted">v_@v.Version • @v.CreatedAtUtc.ToLocalTime()</div>
+        </a>
+                <div class="d-flex align-items-center gap-2">
+                    @if (v.IsCurrent)
+                    {
+                        <span class="badge text-bg-success">Current</span>
+                    }
+                    else
+                    {
+                        <span class="badge text-bg-secondary">Old</span>
+                    }
+                    <a class="btn btn-sm btn-outline-dark" href="/Forms/Submissions?key=@v.FormKey&version=@v.Version">Submissions (v@v.Version)</a>
+                    <!-- New: create a new version prefilled from this specific version -->
+                    <a class="btn btn-sm btn-success" href="/Forms/Create?fromId=@v.Id">New Version from v@v.Version</a>
+                </div>
+      </div>
+    }
+  </div>
+}

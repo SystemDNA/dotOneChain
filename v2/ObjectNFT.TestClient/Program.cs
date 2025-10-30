@@ -31,9 +31,55 @@ class Program
         var objectJsonV1 = JsonSerializer.Serialize(new
         {
             BOID = "100006",
+            FKiApplicationID = "APP001",
             Name = "XIAIAssistant",
+            LabelName = "Assistant V1",
+            TableName = "BusinessObject",
+            OrganizationID = "ORG100",
+            TypeID = 1,
+            FieldCount = 5,
+            Description = "Version 1 - created from test client",
+            IsClassEnabled = true,
+            sPrimaryKey = "BOID",
+            sDeleteRule = "CASCADE",
+            sSearchType = "Exact",
+            iDataSource = 1,
+            bUID = true,
+            iUpdateCount = 1,
+            sType = "Standard",
+            sSection = "Core",
+            StatusTypeID = 1,
+            CreatedBy = "Rajasekhar D.",
+            CreatedTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+            UpdatedBy = "Rajasekhar D.",
             UpdatedTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
-            Note = "Version 1 - created from test client"
+            bIsAutoIncrement = true,
+            iTransactionEnable = 1,
+            sColumns = "Col1,Col2,Col3",
+            bIsHierarchy = false,
+            XIGUID = Guid.NewGuid().ToString(),
+            bDefaults = false,
+            sLastUpdate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+            KPI = "N/A",
+            bIsEncrypt = false,
+            iLevel = 1,
+            iViewLevel = 1,
+            XICreatedBy = "System",
+            XIUpdatedBy = "System",
+            XICreatedWhen = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+            XIUpdatedWhen = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+            sTag = "Init",
+            FKiTagSpaceID = 10,
+            FKiVersionID = 1,
+            FKiApplicationIDXIGUID = Guid.NewGuid().ToString(),
+            bISExceptionBO = false,
+            bImport = false,
+            FKiTagSpaceIDXIGUID = Guid.NewGuid().ToString(),
+            FKiVersionIDXIGUID = Guid.NewGuid().ToString(),
+            iDataSourceXIGUID = Guid.NewGuid().ToString(),
+            bSmartSearch = true,
+            iOrgObject = 1,
+            XIVersion = "v1"
         });
 
         var createReq = new CreateTokenRequest(
@@ -71,12 +117,61 @@ class Program
         // 4) UpdateObject to v2 (preflight -> sign -> send) by controller (sender)
         // ------------------------------------------------------------------
         var prevCid = created.objectCid;
+
+
+
         var v2Obj = JsonSerializer.Serialize(new
         {
             BOID = "100006",
+            FKiApplicationID = "APP001",
             Name = "XIAIAssistant",
+            LabelName = "Assistant V2",
+            TableName = "BusinessObject",
+            OrganizationID = "ORG100",
+            TypeID = 1,
+            FieldCount = 6,
+            Description = "Version 2 - changed one field",
+            IsClassEnabled = true,
+            sPrimaryKey = "BOID",
+            sDeleteRule = "CASCADE",
+            sSearchType = "Exact",
+            iDataSource = 1,
+            bUID = true,
+            iUpdateCount = 2,
+            sType = "Standard",
+            sSection = "Core",
+            StatusTypeID = 1,
+            CreatedBy = "Rajasekhar D.",
+            CreatedTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+            UpdatedBy = "Rajasekhar D.",
             UpdatedTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
-            Note = "Version 2 - changed one field"
+            bIsAutoIncrement = true,
+            iTransactionEnable = 1,
+            sColumns = "Col1,Col2,Col3,Col4",
+            bIsHierarchy = false,
+            XIGUID = Guid.NewGuid().ToString(),
+            bDefaults = false,
+            sLastUpdate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+            KPI = "N/A",
+            bIsEncrypt = false,
+            iLevel = 1,
+            iViewLevel = 2,
+            XICreatedBy = "System",
+            XIUpdatedBy = "System",
+            XICreatedWhen = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+            XIUpdatedWhen = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+            sTag = "Modified",
+            FKiTagSpaceID = 10,
+            FKiVersionID = 2,
+            FKiApplicationIDXIGUID = Guid.NewGuid().ToString(),
+            bISExceptionBO = false,
+            bImport = false,
+            FKiTagSpaceIDXIGUID = Guid.NewGuid().ToString(),
+            FKiVersionIDXIGUID = Guid.NewGuid().ToString(),
+            iDataSourceXIGUID = Guid.NewGuid().ToString(),
+            bSmartSearch = true,
+            iOrgObject = 1,
+            XIVersion = "v2"
         });
 
         var v2Canonical = JsonCanonicalizer.Canonicalize(v2Obj);
@@ -148,13 +243,60 @@ var froze = await api.FreezeAsync(created.tokenId, sender.publicKeyPem);
 Console.WriteLine($"Freeze requested: {froze}");
 
 // Try to push a v3 update (should NOT commit after freeze)
-var v3Obj = JsonSerializer.Serialize(new {
+var v3Obj = JsonSerializer.Serialize(new
+{
     BOID = "100006",
+    FKiApplicationID = "APP001",
     Name = "XIAIAssistant",
+    LabelName = "Assistant V3",
+    TableName = "BusinessObject",
+    OrganizationID = "ORG100",
+    TypeID = 1,
+    FieldCount = 6,
+    Description = "Version 3 - should be blocked by freeze",
+    IsClassEnabled = true,
+    sPrimaryKey = "BOID",
+    sDeleteRule = "CASCADE",
+    sSearchType = "Exact",
+    iDataSource = 1,
+    bUID = true,
+    iUpdateCount = 3,
+    sType = "Standard",
+    sSection = "Core",
+    StatusTypeID = 2, // changed status
+    CreatedBy = "Rajasekhar D.",
+    CreatedTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+    UpdatedBy = "Rajasekhar D.",
     UpdatedTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
-    Note = "Version 3 - should be blocked by freeze"
+    bIsAutoIncrement = true,
+    iTransactionEnable = 1,
+    sColumns = "Col1,Col2,Col3,Col4",
+    bIsHierarchy = false,
+    XIGUID = Guid.NewGuid().ToString(),
+    bDefaults = false,
+    sLastUpdate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+    KPI = "N/A",
+    bIsEncrypt = false,
+    iLevel = 2,
+    iViewLevel = 3,
+    XICreatedBy = "System",
+    XIUpdatedBy = "System",
+    XICreatedWhen = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+    XIUpdatedWhen = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+    sTag = "Freeze",
+    FKiTagSpaceID = 10,
+    FKiVersionID = 3,
+    FKiApplicationIDXIGUID = Guid.NewGuid().ToString(),
+    bISExceptionBO = false,
+    bImport = false,
+    FKiTagSpaceIDXIGUID = Guid.NewGuid().ToString(),
+    FKiVersionIDXIGUID = Guid.NewGuid().ToString(),
+    iDataSourceXIGUID = Guid.NewGuid().ToString(),
+    bSmartSearch = true,
+    iOrgObject = 1,
+    XIVersion = "v3"
 });
-var v3Canonical = JsonCanonicalizer.Canonicalize(v3Obj);
+        var v3Canonical = JsonCanonicalizer.Canonicalize(v3Obj);
 var pre3 = await api.CalcCidAsync(new CalcCidRequest(v3Canonical, $"{created.tokenId}-v3.json", 3))
           ?? throw new Exception("Preflight v3 failed");
 var ts3 = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

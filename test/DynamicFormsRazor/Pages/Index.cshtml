@@ -1,0 +1,45 @@
+@page
+@model DynamicFormsRazor.Pages.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Dashboard</h1>
+    <div class="d-flex gap-2">
+        <a class="btn btn-primary" href="/Forms/Create">Create New Definition</a>
+        <a class="btn btn-outline-secondary" href="/Forms">Browse Definitions</a>
+    </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="row g-3">
+    <div class="col-12 col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <div class="text-muted small">Current Definitions</div>
+                <div class="display-6 fw-semibold">@Model.CurrentDefinitionsCount</div>
+                <div class="small text-muted">Active (IsCurrent = true)</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <div class="text-muted small">Total Versions</div>
+                <div class="display-6 fw-semibold">@Model.TotalVersionsCount</div>
+                <div class="small text-muted">Across all form keys</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <div class="text-muted small">Total Submissions</div>
+                <div class="display-6 fw-semibold">@Model.TotalSubmissionsCount</div>
+                <div class="small text-muted">All time</div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,140 @@
+@page
+@model DynamicFormsRazor.Pages.Forms.RenderModel
+@using DynamicFormsRazor.Models
+@{
+    ViewData["Title"] = Model.Definition?.Name ?? "Form";
+    var sections = Model.Definition?.Sections?.OrderBy(s => s.Order).ToList() ?? new List<SectionDefinition>();
+}
+
+@if (Model.Definition is null)
+{
+    <div class="alert alert-danger">Form not found.</div>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">@Model.Definition.Name</h2>
+        <span class="text-muted">v@Model.Definition.Version</span>
+    </div>
+
+    <div id="wizard" class="wizard card shadow-sm">
+        <div class="card-header bg-white">
+            <div class="wizard-steps d-flex flex-wrap gap-2">
+                @for (int i = 0; i < sections.Count; i++)
+                {
+                    var s = sections[i];
+                    <button type="button" class="btn btn-sm btn-outline-secondary wizard-step-button" data-step="@i">
+                        @(i + 1). @s.Title
+                    </button>
+                }
+            </div>
+        </div>
+
+        <div class="card-body">
+            <form method="post" id="dynamicForm">
+                @for (int i = 0; i < sections.Count; i++)
+                {
+                    var s = sections[i];
+                    <div class="wizard-step" data-step="@i" style="display:@(i==0 ? "block" : "none")">
+                        <h5>@s.Title</h5>
+                        @if (!string.IsNullOrWhiteSpace(s.Description))
+                        {
+                            <p class="text-muted">@s.Description</p>
+                        }
+
+                        @foreach (var f in s.Fields)
+                        {
+                            var fieldName = f.Name;
+                            var fieldLabel = string.IsNullOrWhiteSpace(f.Label) ? f.Name : f.Label;
+                            var currentVal = Model.Answers.ContainsKey(fieldName) ? Model.Answers[fieldName] : "";
+                            var hasErr = Model.Errors.TryGetValue(fieldName, out var errMsg);
+                            <div class="mb-3">
+                                <label class="form-label" for="@fieldName">@fieldLabel</label>
+
+                                @switch (f.Type)
+                                {
+                                    case FieldType.Text:
+                                        @:<input id="@fieldName" name="@fieldName" value="@currentVal" class="form-control @(hasErr ? "is-invalid" : "")" placeholder="@f.Placeholder" />
+                                        break;
+
+                                    case FieldType.TextArea:
+                                        @:<textarea id="@fieldName" name="@fieldName" class="form-control @(hasErr ? "is-invalid" : "")" rows="4" placeholder="@f.Placeholder">@currentVal</textarea>
+                                        break;
+
+                                    case FieldType.Email:
+                                        @:<input id="@fieldName" type="email" name="@fieldName" value="@currentVal" class="form-control @(hasErr ? "is-invalid" : "")" placeholder="@f.Placeholder" />
+                                        break;
+
+                                    case FieldType.Number:
+                                        @:<input id="@fieldName" type="number" name="@fieldName" value="@currentVal" class="form-control @(hasErr ? "is-invalid" : "")" placeholder="@f.Placeholder" />
+                                        break;
+
+                                    case FieldType.Date:
+                                        @:<input id="@fieldName" type="date" name="@fieldName" value="@currentVal" class="form-control @(hasErr ? "is-invalid" : "")" />
+                                        break;
+
+                                    case FieldType.Select:
+                                        <select id="@fieldName" name="@fieldName" class="form-select @(hasErr?"is-invalid":"")">
+                                            <option value="">-- select --</option>
+                                            @if (f.Options != null)
+                                            {
+                                                foreach (var opt in f.Options)
+                                                {
+                                                    var selected = string.Equals((currentVal ?? ""), opt, StringComparison.Ordinal) ? "selected" : null;
+                                                    <option value="@opt" selected="@selected">@opt</option>
+                                                }
+                                            }
+                                        </select>
+                                        break;
+
+                                    case FieldType.Radio:
+                                        @if (f.Options != null)
+                                        {
+                                            foreach (var opt in f.Options)
+                                            {
+                                                var checkedAttr = string.Equals((currentVal ?? ""), opt, StringComparison.Ordinal) ? "checked" : null;
+                                                var rid = $"{fieldName}_{opt}";
+                                                <div class="form-check">
+                                                    <input class="form-check-input @(hasErr?"is-invalid":"")" type="radio" name="@fieldName" id="@rid" value="@opt" checked="@checkedAttr" />
+                                                    <label class="form-check-label" for="@rid">@opt</label>
+                                                </div>
+                                            }
+                                        }
+                                        break;
+
+                                    case FieldType.Checkbox:
+                                        {
+                                            var isChecked = string.Equals((currentVal ?? ""), "true", StringComparison.OrdinalIgnoreCase) ? "checked" : null;
+                                            <div class="form-check">
+                                                <input class="form-check-input @(hasErr?"is-invalid":"")" type="checkbox" id="@fieldName" name="@fieldName" value="true" checked="@isChecked" />
+                                                <label class="form-check-label" for="@fieldName">@f.Label</label>
+                                            </div>
+                                        }
+                                        break;
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(f.HelpText))
+                                {
+                                    <div class="form-text">@f.HelpText</div>
+                                }
+                                @if (hasErr && !string.IsNullOrEmpty(errMsg))
+                                {
+                                    <div class="invalid-feedback d-block">@errMsg</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="button" class="btn btn-outline-secondary" id="prevStep">Previous</button>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-primary" id="nextStep">Next</button>
+                        <button type="submit" class="btn btn-success" id="submitBtn" style="display:none;">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+@section Scripts { }
